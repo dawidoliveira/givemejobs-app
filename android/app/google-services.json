@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1024784375502",
+    "project_id": "givemejobs-c5313",
+    "storage_bucket": "givemejobs-c5313.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024784375502:android:46c1ea874960cc444c7a9f",
+        "android_client_info": {
+          "package_name": "br.com.dawidoliveira.give_me_jobs_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024784375502-1kcl1bdlrmsl7u10kpi7rteid4i5j0b4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.dawidoliveira.give_me_jobs_app",
+            "certificate_hash": "0d1264bb298bc9f135a5978f8f1f292ba1a59afd"
+          }
+        },
+        {
+          "client_id": "1024784375502-7vl0n16qfgdn64agmcmip9uojscs9lag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCujZMnE7JrnBsufyBUHEqRV3r0sDbk5UU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024784375502-7vl0n16qfgdn64agmcmip9uojscs9lag.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
