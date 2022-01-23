@@ -6,16 +6,16 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:give_me_jobs_app/app/core/utils.dart';
 import 'package:give_me_jobs_app/app/modules/signup/signup_state.dart';
 import 'package:give_me_jobs_app/app/repositories/course_repository/course_repository.dart';
-import 'package:give_me_jobs_app/app/repositories/user_repository/user_repository.dart';
+import 'package:give_me_jobs_app/app/services/auth_service/auth_service.dart';
 import 'package:give_me_jobs_app/app/shared/models/course_model.dart';
 import 'package:give_me_jobs_app/app/shared/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SignupStore extends NotifierStore<Exception, SignupState> {
   final CourseRepository _courseRepository;
-  final UserRepository _userRepository;
+  final AuthService _authService;
 
-  SignupStore(this._courseRepository, this._userRepository)
+  SignupStore(this._courseRepository, this._authService)
       : super(SignupState.initialState()) {
     init();
   }
@@ -49,7 +49,6 @@ class SignupStore extends NotifierStore<Exception, SignupState> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (image == null) return;
-
     final newState = state.copyWith(
       selectedImage: File(image.path),
     );
@@ -108,7 +107,7 @@ class SignupStore extends NotifierStore<Exception, SignupState> {
       );
     } else {
       if (state.formKey!.currentState!.validate()) {
-        await _userRepository
+        await _authService
             .createUserWithEmailAndPassword(
           user: UserModel(
             email: state.email!.text.trim(),
@@ -116,7 +115,7 @@ class SignupStore extends NotifierStore<Exception, SignupState> {
             fullname: state.fullname!.text,
             course: state.selectedCourse!,
             password: state.pass!.text.trim(),
-            imgUrl: state.selectedImage!.path,
+            imgUrl: state.selectedImage?.path,
           ),
         )
             .then((_) {

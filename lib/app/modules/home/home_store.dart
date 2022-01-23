@@ -1,26 +1,25 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:give_me_jobs_app/app/modules/home/home_state.dart';
-import 'package:give_me_jobs_app/app/repositories/user_repository/user_repository.dart';
 import 'package:give_me_jobs_app/app/repositories/vacancy_repository/vacancy_repository.dart';
+import 'package:give_me_jobs_app/app/services/auth_service/auth_service.dart';
+import 'package:give_me_jobs_app/app/shared/models/user_model.dart';
 import 'package:give_me_jobs_app/app/shared/models/vacancy_model.dart';
 
 class HomeStore extends NotifierStore<Exception, HomeState> {
-  final UserRepository _userRepository;
+  final AuthService _authService;
   final VacancyRepository _vacancyRepository;
 
-  HomeStore(this._userRepository, this._vacancyRepository)
+  HomeStore(this._authService, this._vacancyRepository)
       : super(HomeState.initialState()) {
     init();
   }
 
+  UserModel get user => _authService.loggedUser!;
+
   Future<void> init() async {
-    var newState = state.copyWith(
-      user: _userRepository.user,
-    );
-    update(newState);
     setLoading(true);
-    newState = state.copyWith(
+    final newState = state.copyWith(
       vacancies: await _vacancyRepository.getVacancies(),
       myVacancies: await _vacancyRepository.getMyVacancies(),
     );
@@ -34,7 +33,7 @@ class HomeStore extends NotifierStore<Exception, HomeState> {
       './vacancy',
       arguments: {
         'vacancy': vacancy,
-        'user': state.user,
+        'user': user,
       },
     );
   }

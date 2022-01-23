@@ -7,14 +7,15 @@ class CourseRepository {
   final FirebaseFirestore _firestore;
   final Connectivity _connectivity;
   List<CourseModel>? courses;
+  final LocalStorage _localStorage;
 
-  CourseRepository(this._firestore, this._connectivity) {
+  CourseRepository(this._firestore, this._connectivity, this._localStorage) {
     getAllCourses();
   }
 
   Future<List<CourseModel>> getAllCourses() async {
     try {
-      final list = (await LocalStorage.getListData(key: 'courses'))
+      final list = (await _localStorage.getListData(key: 'courses'))
               ?.map((e) => CourseModel.fromJson(e))
               .toList() ??
           <CourseModel>[];
@@ -26,7 +27,7 @@ class CourseRepository {
               'id': e.id,
               'name': e.get('name'),
             })));
-        await LocalStorage.saveListData(
+        await _localStorage.saveListData(
             key: 'courses', data: list.map((e) => e.toJson()).toList());
       }
       courses = list;

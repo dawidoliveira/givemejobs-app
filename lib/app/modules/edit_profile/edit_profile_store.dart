@@ -9,30 +9,36 @@ import 'package:give_me_jobs_app/app/modules/edit_profile/edit_profile_state.dar
 import 'package:give_me_jobs_app/app/modules/home/home_store.dart';
 import 'package:give_me_jobs_app/app/repositories/course_repository/course_repository.dart';
 import 'package:give_me_jobs_app/app/repositories/user_repository/user_repository.dart';
+import 'package:give_me_jobs_app/app/services/auth_service/auth_service.dart';
 import 'package:give_me_jobs_app/app/shared/models/course_model.dart';
+import 'package:give_me_jobs_app/app/shared/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileStore extends NotifierStore<Exception, EditProfileState> {
+  final AuthService _authService;
   final UserRepository _userRepository;
   final CourseRepository _courseRepository;
-  EditProfileStore(this._userRepository, this._courseRepository)
+  EditProfileStore(
+      this._authService, this._courseRepository, this._userRepository)
       : super(EditProfileState.initialState()) {
     init();
   }
 
+  UserModel get user => _authService.loggedUser!;
+
   Future<void> init() async {
     final newState = state.copyWith(
-      user: _userRepository.user,
+      user: user,
       courses: _courseRepository.courses,
-      selectedCourse: _userRepository.user!.course,
+      selectedCourse: user.course,
       curriculum: TextEditingController(
-        text: _userRepository.user!.curriculum ?? '',
+        text: user.curriculum ?? '',
       ),
       name: TextEditingController(
-        text: _userRepository.user!.fullname,
+        text: user.fullname,
       ),
       registration: TextEditingController(
-        text: _userRepository.user!.registration,
+        text: user.registration,
       ),
     );
     update(newState);
@@ -48,22 +54,25 @@ class EditProfileStore extends NotifierStore<Exception, EditProfileState> {
       ),
     );
     update(newState);
-    await _userRepository
-        .editUser(
-      user: newState.user!,
-    )
-        .then((_) async {
-      await Modular.get<HomeStore>().init();
+
+    try {
+      final newUserData = await _userRepository.editUser(user: newState.user!);
+
+      _authService.loggedUser = newUserData;
+
       Utils.feedBack(
           isSuccess: true, context: context, message: 'Alterado com sucesso!');
-    }).onError((error, stackTrace) {
+
+      Modular.get<HomeStore>().init();
+    } catch (e) {
       setError(Exception(error));
       Utils.feedBack(
           isSuccess: false,
           context: context,
           message: 'Erro ao alterar seus dados!');
-    });
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }
 
   Future<void> changeCurriculum() async {

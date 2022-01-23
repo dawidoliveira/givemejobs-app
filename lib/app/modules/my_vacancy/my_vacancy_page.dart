@@ -21,7 +21,7 @@ class MyVacancyPageState extends State<MyVacancyPage> {
         title: Text(widget.title),
       ),
       body: Stepper(
-        controlsBuilder: (context, {onStepCancel, onStepContinue}) {
+        controlsBuilder: (context, _) {
           return Row(
             children: <Widget>[
               Container(),

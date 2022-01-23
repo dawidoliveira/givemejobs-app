@@ -50,61 +50,43 @@ class CustomAppBar extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 3,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 3,
+                    ),
+                    borderRadius: BorderRadius.circular(65),
                   ),
-                  borderRadius: BorderRadius.circular(65),
-                ),
-                child: ScopedBuilder<HomeStore, Exception, HomeState>(
-                  store: store,
-                  // onLoading: (_) {
-                  //   return CircleAvatar(
-                  //     child: Shimmer.fromColors(
-                  //       child: Container(
-                  //         height: 200,
-                  //         width: 200,
-                  //         decoration: BoxDecoration(
-                  //           color: Colors.black,
-                  //           borderRadius: BorderRadius.circular(60),
-                  //         ),
-                  //       ),
-                  //       baseColor: Colors.white,
-                  //       highlightColor: Colors.grey,
-                  //     ),
-                  //     radius: 60,
-                  //   );
-                  // },
-                  onState: (context, triple) => CircleAvatar(
-                    foregroundImage: triple.user == null ||
-                            triple.user!.imgUrl == null ||
-                            triple.user!.imgUrl!.isEmpty
-                        ? null
-                        : NetworkImage(triple.user!.imgUrl!),
-                    child: triple.user == null ||
-                            triple.user!.imgUrl == null ||
-                            triple.user!.imgUrl!.isEmpty
-                        ? const Icon(
-                            Icons.person,
-                            size: 60,
-                          )
-                        : Shimmer.fromColors(
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(60),
+                  child: TripleBuilder(
+                    store: store,
+                    builder: (context, triple) {
+                      return CircleAvatar(
+                        foregroundImage: store.user.imgUrl == null ||
+                                store.user.imgUrl!.isEmpty
+                            ? null
+                            : NetworkImage(store.user.imgUrl!),
+                        child: store.user.imgUrl == null ||
+                                store.user.imgUrl!.isEmpty
+                            ? const Icon(
+                                Icons.person,
+                                size: 60,
+                              )
+                            : Shimmer.fromColors(
+                                child: Container(
+                                  height: 200,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(60),
+                                  ),
+                                ),
+                                baseColor: Colors.white,
+                                highlightColor: Colors.grey,
                               ),
-                            ),
-                            baseColor: Colors.white,
-                            highlightColor: Colors.grey,
-                          ),
-                    radius: 60,
-                  ),
-                ),
-              ),
+                        radius: 60,
+                      );
+                    },
+                  )),
               ScopedBuilder<HomeStore, Exception, HomeState>(
                 store: store,
                 // onLoading: (context) => Column(
@@ -125,13 +107,12 @@ class CustomAppBar extends StatelessWidget {
                 // ),
                 onState: (context, triple) => Text.rich(
                   TextSpan(
-                    text:
-                        '${triple.user == null ? 'Sem nome' : triple.user!.fullname}\n',
+                    text: '${store.user.fullname}\n',
                     style: AppTextStyles.content.copyWith(fontSize: 24),
                     children: [
                       TextSpan(
                         text:
-                            '${triple.user == null ? 'Sem curso' : triple.user!.course.name} - ${triple.user == null ? 'Sem matrícula' : triple.user!.registration}',
+                            '${store.user.course.name} - ${store.user.registration}',
                         style: AppTextStyles.content.copyWith(fontSize: 16),
                       ),
                     ],

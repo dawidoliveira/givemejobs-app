@@ -5,7 +5,7 @@ import 'package:give_me_jobs_app/app/modules/edit_profile/edit_profile_store.dar
 class EditProfileModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.lazySingleton((i) => EditProfileStore(i(), i())),
+    Bind.lazySingleton((i) => EditProfileStore(i(), i(), i())),
   ];
 
   @override

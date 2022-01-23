@@ -8,13 +8,17 @@ import 'package:give_me_jobs_app/app/shared/models/vacancy_model.dart';
 class VacancyRepository implements IVacancyRepository {
   final FirebaseFirestore _firestore;
   final CourseRepository _courseRepository;
+  final LocalStorage _localStorage;
 
-  VacancyRepository(this._firestore, this._courseRepository);
+  VacancyRepository(
+      this._firestore, this._courseRepository, this._localStorage);
 
   @override
   Future<List<VacancyModel>> getVacancies() async {
     try {
-      final user = UserModel.fromJson(await LocalStorage.getData(key: 'user'));
+      final userDataLocalStorage = await _localStorage.getData(key: 'user');
+      if (userDataLocalStorage == null) return [];
+      final user = UserModel.fromJson(userDataLocalStorage);
       final course = (await _courseRepository.getAllCourses())
           .firstWhere((element) => element.id == user.course.id);
       final List<VacancyModel> list = [];
@@ -87,7 +91,9 @@ class VacancyRepository implements IVacancyRepository {
   @override
   Future<List<VacancyModel>> getMyVacancies() async {
     try {
-      final user = UserModel.fromJson(await LocalStorage.getData(key: 'user'));
+      final userDataLocalStorage = await _localStorage.getData(key: 'user');
+      if (userDataLocalStorage == null) return [];
+      final user = UserModel.fromJson(userDataLocalStorage);
 
       final list = <VacancyModel>[];
 
