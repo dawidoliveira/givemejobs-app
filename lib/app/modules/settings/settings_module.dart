@@ -1,6 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:give_me_jobs_app/app/modules/edit_profile/edit_profile_module.dart';
-import 'package:give_me_jobs_app/app/modules/settings/settings_Page.dart';
+import 'package:give_me_jobs_app/app/modules/settings/settings_page.dart';
 import 'package:give_me_jobs_app/app/modules/settings/settings_store.dart';
 
 class SettingsModule extends Module {
